@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/RocioJamanca/RSA/issues"
   },
-  "homepage": "https://github.com/RocioJamanca/RSA#readme"
+  "homepage": "https://github.com/RocioJamanca/RSA#readme",
+  "dependencies": {
+    "bigint-crypto-utils": "^2.4.7"
+  }
 }
