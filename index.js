@@ -1,6 +1,22 @@
-const fs=  require('fs');
+'use strict';
+let cryptoUtils = require('bigint-crypto-utils');
+const privateKey = require('./privateKey');
+const publicKey = require('./publicKey');
 
-const a = "hello";
+class RSA{
+
+    generateRandomKey(){
+        let publicKey;
+        let privateKey;
+        cryptoUtils.prime(5, 3).then(prime => {
+            console.log(prime);
+        });
+    }
+}
+
+exports.privateKey = privateKey;
+exports.publicKey = publicKey;
+module.exports = RSA;
 
 
 // Clase public key
