@@ -5,18 +5,42 @@ const publicKey = require('./publicKey');
 
 class RSA{
 
-    generateRandomKey(){
-        let publicKey;
-        let privateKey;
-        cryptoUtils.prime(5, 3).then(prime => {
-            console.log(prime);
-        });
+    privateKey;
+    publicKey={};
+
+
+
+    constructor() {
+        this.publicKey.n = BigInt.max;
+
+
+        //Two distinct prime numbers (Coprime)
+        let p = this.generateRandomPrime();
+        let q = this.generateRandomPrime();
+
+        // n = p * q
+        this.publicKey.n = cryptoUtils.modPow(p,q,this.publicKey.n)
+        console.log(this.publicKey.n)
+
+    }
+
+
+    generateRandomPrime(){
+
+        return cryptoUtils.primeSync(12,5);
     }
 }
 
 exports.privateKey = privateKey;
 exports.publicKey = publicKey;
 module.exports = RSA;
+
+let rsa= new RSA();
+
+
+
+
+
 
 
 // Clase public key
@@ -29,9 +53,13 @@ module.exports = RSA;
 
 //Clave privada
 
-// d: begint
-// // n: bigint
-// // // decrypt (c: bigint) -> m: begint
-// // decrypt (c: begint) -> m: bigint =c^d
+// d: beginti
+// n: bigint
+//  decrypt (c: bigint) -> m: begint
+//  decrypt (c: begint) -> m: bigint =c^d
 // sign (m:bigint) -> s: bigint =m^d mod n
 
+
+//Método de generar claves
+
+//generatekeys(bitLength)->private key
