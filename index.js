@@ -11,23 +11,41 @@ class RSA{
 
 
     constructor() {
-        this.publicKey.n = BigInt.max;
-
 
         //Two distinct prime numbers (Coprime)
         let p = this.generateRandomPrime();
         let q = this.generateRandomPrime();
 
         // n = p * q
-        this.publicKey.n = cryptoUtils.modPow(p,q,this.publicKey.n)
-        console.log(this.publicKey.n)
+        this.publicKey.n = p*q;
+        this.privateKey.n= this.publicKey.n;
+
+        //Vemos el resultado de p, q y n
+        console.log("p: ",p," q: ",q);
+        console.log("n = p * q" ,this.publicKey.n);
+
+        //Calculate Totien function
+        let phi = (p-BigInt(1))*(q-BigInt(1));
+        console.log("phi = (p-1)*(q-1)" ,phi);
+
+        //Coprime of Phi as "e"
+        this.publicKey.e = BigInt(65537);
+
+        //Let's check if it is a coprime
+        if (this.publicKey.n%this.publicKey.e === (0))
+        {
+            console.log("La has liao pollito")
+        }
+
+        //Calculate d=e^(-1) mod phi(n)
+        this.privateKey.d = cryptoUtils.modInv(this.publicKey.e,phi);
+
 
     }
 
 
     generateRandomPrime(){
-
-        return cryptoUtils.primeSync(12,5);
+        return cryptoUtils.primeSync(10,5);
     }
 }
 
