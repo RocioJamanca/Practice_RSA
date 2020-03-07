@@ -74,6 +74,32 @@ class RSA{
             console.log('La has liao pollito');
         }
     }
+
+    //Used for encoding strings
+    static zeroPad(n, w){
+        while(n.toString().length<w) n = '0' + n;
+        return n;
+    }
+
+    static encodeString(string){
+        let number = "999";
+        for(let i = 0; i < string.length; i++){
+            let char = this.zeroPad(string.charCodeAt(i), 3);
+            number = number + char;
+        }
+        return BigInt(number);
+    }
+
+    static decodeString(number){
+        let stringNumber = number.toString();
+        let characterNum = stringNumber.length / 3;
+        let decoded = "";
+        for(let i = 1; i < characterNum; i++){
+            let character = stringNumber.substr(i * 3, 3);
+            decoded += String.fromCharCode(Number(character));
+        }
+        return decoded;
+    }
 }
 module.exports = RSA;
 
@@ -90,7 +116,7 @@ let verification = rsa.verify(signature);
 console.log('Verification: ', verification);
 //The verification is the same as the message signed
 
-
-//Método de generar claves
-
-//generatekeys(bitLength)->private key
+let encoded = RSA.encodeString('Hola això és una prova per veure que funciona correctament la codificació');
+console.log('Encoded: ', encoded);
+let decoded = RSA.decodeString(encoded);
+console.log('Decoded: ', decoded);
