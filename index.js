@@ -2,10 +2,11 @@
 let cryptoUtils = require('bigint-crypto-utils');
 
 class RSA{
-    privateKey = {};
-    publicKey = {};
 
     constructor() {
+        this.publicKey = {};
+        this.privateKey = {};
+
         //Two distinct prime numbers (Coprime)
         let p = this.generateRandomPrime();
         let q = this.generateRandomPrime();
