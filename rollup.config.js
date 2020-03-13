@@ -2,11 +2,11 @@ export default {
     input: 'index.js',
     output: [
         {
-            file: 'index.cjs.js',
+            file: 'build/index.cjs.js',
             format: 'cjs'
         },
         {
-            file: 'index.esm.js',
+            file: 'build/index.esm.js',
             format: 'esm'
         }
     ],
