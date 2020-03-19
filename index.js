@@ -1,7 +1,7 @@
 'use strict';
 let cryptoUtils = require('bigint-crypto-utils');
 
-class RSA{
+class my_rsa{
 
     constructor() {
         this.publicKey = {};
@@ -16,12 +16,12 @@ class RSA{
         this.privateKey.n= this.publicKey.n;
 
         //Vemos el resultado de p, q y n
-        console.log("p: ", p, " q: ", q);
-        console.log("n = p * q", this.publicKey.n);
+        // console.log("p: ", p, " q: ", q);
+        // console.log("n = p * q", this.publicKey.n);
 
         //Calculate Totien function
         let phi = (p-BigInt(1))*(q-BigInt(1));
-        console.log("phi = (p-1)*(q-1)" ,phi);
+        // console.log("phi = (p-1)*(q-1)" ,phi);
 
         //"e" has to be coprime with phi
         this.publicKey.e = BigInt(65537);
@@ -34,7 +34,7 @@ class RSA{
 
         //Calculate d=e^(-1) mod phi(n)
         this.privateKey.d = cryptoUtils.modInv(this.publicKey.e, phi);
-        console.log('d: ', this.privateKey.d);
+        // console.log('d: ', this.privateKey.d);
     }
 
 
@@ -102,22 +102,22 @@ class RSA{
         return decoded;
     }
 }
-module.exports = RSA;
+module.exports = my_rsa;
 
-let rsa = new RSA();
-let encrypted = rsa.encrypt(BigInt(123456789));
-console.log('Encrypted: ', encrypted);
-let message = rsa.decrypt(encrypted);
-console.log('Message: ', message);
-//The decrypted message is the same ad the original
-
-let signature = rsa.sign(BigInt(1234567890));
-console.log('Signature: ', signature);
-let verification = rsa.verify(signature);
-console.log('Verification: ', verification);
-//The verification is the same as the message signed
-
-let encoded = RSA.encodeString('Hola això és una prova per veure que funciona correctament la codificació');
-console.log('Encoded: ', encoded);
-let decoded = RSA.decodeString(encoded);
-console.log('Decoded: ', decoded);
+// let rsa = new my_rsa();
+// let encrypted = rsa.encrypt(BigInt(123456789));
+// console.log('Encrypted: ', encrypted);
+// let message = rsa.decrypt(encrypted);
+// console.log('Message: ', message);
+// //The decrypted message is the same ad the original
+//
+// let signature = rsa.sign(BigInt(1234567890));
+// console.log('Signature: ', signature);
+// let verification = rsa.verify(signature);
+// console.log('Verification: ', verification);
+// //The verification is the same as the message signed
+//
+// let encoded = my_rsa.encodeString('Hola això és una prova per veure que funciona correctament la codificació');
+// console.log('Encoded: ', encoded);
+// let decoded = my_rsa.decodeString(encoded);
+// console.log('Decoded: ', decoded);
