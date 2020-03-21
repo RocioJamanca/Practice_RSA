@@ -71,22 +71,31 @@ class my_rsa{
     }
 
     //The message to be blinded and the public key (e,n) of the entity signing
-    static blind(message, e, n){
+     blind(message, e, n){
         // Generate r
         let r = this.generateRandomPrime();
 
         //Check that r and n are co-prime
         if(!this.checkCoPrime(n, r)){
             console.log('The numbers: ', n, ' and ', r, ' are not coPrime');
-            return this.blind(message, e, n);
+            //return this.blind(message, e, n);
         }
 
         //TODO: Operation below
         // m * r ^ e mod n
-
+         //r=2 e=5 n=20 m=10
+        let blindMessage = (message * cryptoUtils.modPow(r,e,n)) %n;
+        //32 mod 20  = 12
+         // 12 *10 = 120
+        //BindMessage = m * r ^ e mod n
+        return blindMessage;
     }
 
     unBlind(cryptogram, r, n){
+        //cryptogram * r^-1 mod n
+        //Invers modular -- > r^(-1) mod (n)
+        let validSignature = (cryptogram * cryptoUtils.modInv(r,n))  %n;
+        return validSignature;
         //TODO: Find modular inverse of r mod n
 
         //TODO: Below operation
