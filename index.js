@@ -81,8 +81,6 @@ class my_rsa{
             //return this.blind(message, e, n);
         }
 
-        //TODO: Operation below
-        // m * r ^ e mod n
          //r=2 e=5 n=20 m=10
         let blindMessage = (message * cryptoUtils.modPow(r,e,n)) %n;
         //32 mod 20  = 12
@@ -96,10 +94,6 @@ class my_rsa{
         //Invers modular -- > r^(-1) mod (n)
         let validSignature = (cryptogram * cryptoUtils.modInv(r,n))  %n;
         return validSignature;
-        //TODO: Find modular inverse of r mod n
-
-        //TODO: Below operation
-        //c * r^-1 mod n
     }
 
     static checkCoPrime(number, otherNumber){
