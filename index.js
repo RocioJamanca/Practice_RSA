@@ -8,8 +8,8 @@ class my_rsa{
         this.privateKey = {};
 
         //Two distinct prime numbers -> Co-Primes
-        let p = this.generateRandomPrime();
-        let q = this.generateRandomPrime();
+        let p = my_rsa.generateRandomPrime();
+        let q = my_rsa.generateRandomPrime();
 
         // n = p * q
         this.publicKey.n = p * q;
@@ -31,11 +31,6 @@ class my_rsa{
         this.privateKey.d = cryptoUtils.modInv(this.publicKey.e, phi);
     }
 
-
-    generateRandomPrime(){
-        return cryptoUtils.primeSync(100,5);
-    }
-
     decrypt(cypher){
         this.checkLessThanN(cypher);
         // return message = c^d mod n
@@ -54,19 +49,13 @@ class my_rsa{
         return cryptoUtils.modPow(message, this.publicKey.e, this.publicKey.n);
     }
 
-    verify(signature){
-        this.checkLessThanN(signature);
-        // return message = s^e mod n
-        return cryptoUtils.modPow(signature, this.publicKey.e, this.publicKey.n);
-    }
-
     static verify(signature, e, n){
-        let verification = cryptoUtils.modPow(signature, e, n)
+        return  cryptoUtils.modPow(signature, e, n)
     }
 
     //The message to be blinded and the public key (e,n) of the entity signing
-     static blind(message, e, n){
-        let r = this.generateRandomPrime();
+    static blind(message, e, n){
+        const r = this.generateRandomPrime();
         //TODO: check  r < n
 
         if(!this.checkCoPrime(n, r)){
@@ -74,22 +63,22 @@ class my_rsa{
             return this.blind(message, e, n);
         }
 
-        // return BlindMessage = m * r ^ e mod n
-        return (message * cryptoUtils.modPow(r, e, n)) % n;
+        // return BlindMessage = m * r ^ e mod n    and     r
+        return {
+            blindedMessage: (message * cryptoUtils.modPow(r, e, n)) % n,
+            r: r
+        };
     }
 
-    unBlind(cryptogram, r, n){
+    static unBlind(cryptogram, r, n){
         //cryptogram * r^-1 mod n
         //Inverse modular -- > r^(-1) mod (n)
-        let signature = (cryptogram * cryptoUtils.modInv(r,n))  %n;
-
-        //TODO: Check that signature is valid
-
-        return signature;
+        let signature = (cryptogram * cryptoUtils.modInv(r,n)) % n;
+        return BigInt(signature);
     }
 
     static checkCoPrime(number, otherNumber){
-        return cryptoUtils.gcd(number, otherNumber) === 1
+        return cryptoUtils.gcd(number, otherNumber) === BigInt(1)
     }
 
     checkLessThanN(number){
