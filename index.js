@@ -31,62 +31,152 @@ class my_rsa{
         this.privateKey.d = cryptoUtils.modInv(this.publicKey.e, phi);
     }
 
+
+    /**
+     * Decrypt the encrypted message
+     * If cypher is less than n.
+     *
+     * @param {BigInt} cypher : encrypted message to decrypt.
+     *
+     * @returns {BigInt} message : decrypted message.
+     *
+     * message = cypher^d mod n
+     * d : Private exponent
+     * n : Public modulus
+     */
     decrypt(cypher){
         this.checkLessThanN(cypher);
-        // return message = c^d mod n
         return cryptoUtils.modPow(cypher, this.privateKey.d, this.publicKey.n);
     }
 
+    /**
+     * Sign the message.
+     * If message us less tha n.
+     *
+     * @param {BigInt} message: message to sing.
+     *
+     * @returns {BigInt} Signature.
+     *
+     * signature = message^d mod n
+     * d : Private exponent
+     * n : Public modulus
+     */
     sign(message){
         this.checkLessThanN(message);
-        //return signature = m^d mod n
         return cryptoUtils.modPow(message, this.privateKey.d, this.publicKey.n);
     }
 
+    /**
+     * Encrypt a message.
+     * If message is less than n.
+     *
+     * @param {BigInt} message: message to encrypt.
+     *
+     * @returns {BigInt}  cypher: message encrypted.
+     *
+     * cypher = message^e mod n
+     * e : Public exponent
+     * n : Public modulus
+     */
     encrypt(message){
         this.checkLessThanN(message);
-        //return cypher = m^e mod n
         return cryptoUtils.modPow(message, this.publicKey.e, this.publicKey.n);
     }
 
+    /**
+     * Check if the signature is correct
+     * If signature is less than n.
+     *
+     * @param {BigInt} signature: signature to verify
+     *
+     * @param {BigInt} e: Public exponent
+     *
+     * @param {BigInt} n: Public modulus
+     *
+     * @returns {BigInt}  The signature is correct if message = signature^e mod n
+     *
+     */
     static verify(signature, e, n){
         return  cryptoUtils.modPow(signature, e, n)
     }
 
-    //The message to be blinded and the public key (e,n) of the entity signing
+    /**
+     * Blind a message with a blinding factor
+     * The message to be blinded and the public key (e,n) of the entity signing
+     *
+     * @param {BigInt} message: message to be blind.
+     *
+     * @param {BigInt} e: Public exponent
+     *
+     * @param {BigInt} n: Public modulus
+     *
+     * @returns {BigInt}  blindedMessage = message * r^e mod n
+     *
+     * @returns {BigInt} r: blind factor  r ϵ Zn * such as gcd(r,n) = 1
+     */
     static blind(message, e, n){
         const r = this.generateRandomPrime();
-        //TODO: check  r < n
 
         if(!this.checkCoPrime(n, r)){
             console.log('The numbers: ', n, ' and ', r, ' are not coPrime');
             return this.blind(message, e, n);
         }
 
-        // return BlindMessage = m * r ^ e mod n    and     r
         return {
             blindedMessage: (message * cryptoUtils.modPow(r, e, n)) % n,
             r: r
         };
     }
 
+    /**
+     * Unblind cryptogram in order to obtain the signature
+     *
+     * @param {BigInt} cryptogram: message to unblind
+     *
+     * @param {BigInt} r: blind factor
+     *
+     * @param {BigInt} n: Public modulus
+     *
+     * @returns {BigInt}  Signature = cryptogram * r^-1 mod n
+     * Inverse modular : r^(-1) mod (n)
+     */
     static unBlind(cryptogram, r, n){
-        //cryptogram * r^-1 mod n
-        //Inverse modular -- > r^(-1) mod (n)
         let signature = (cryptogram * cryptoUtils.modInv(r,n)) % n;
         return BigInt(signature);
     }
 
+    /**
+     * Check if the numbers are coprime if  gcd(a,b) = 1
+     *
+     * @param {BigInt} number: one of the two numbers to compare
+     *
+     * @param {BigInt} otherNumber: one of the two numbers to compare
+     *
+     * @returns {boolean}
+     */
     static checkCoPrime(number, otherNumber){
         return cryptoUtils.gcd(number, otherNumber) === BigInt(1)
     }
 
+    /**
+     * Check if a number is less than n.
+     *
+     * n: Public modulus
+     *
+     * @param {BigInt} number: number to check
+     *
+     */
     checkLessThanN(number){
         if(number > this.publicKey.n){
-            console.log('La has liao pollito');
+            console.log('The number does not meet the condition less than n');
         }
     }
 
+    /**
+     * Generate a random prime
+     *
+     * @returns {BigInt}  Random prime number
+     */
     static generateRandomPrime() {
         return cryptoUtils.primeSync(100,5);
     }
