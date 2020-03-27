@@ -36,9 +36,9 @@ class my_rsa{
      * Decrypt the encrypted message
      * If cypher is less than n.
      *
-     * @param {BigInt} cypher : encrypted message to decrypt.
+     * @param {bigint} cypher : encrypted message to decrypt.
      *
-     * @returns {BigInt} message : decrypted message.
+     * @returns {bigint} message : decrypted message.
      *
      * message = cypher^d mod n
      * d : Private exponent
@@ -53,9 +53,9 @@ class my_rsa{
      * Sign the message.
      * If message us less tha n.
      *
-     * @param {BigInt} message: message to sing.
+     * @param {bigint} message: message to sing.
      *
-     * @returns {BigInt} Signature.
+     * @returns {bigint} Signature.
      *
      * signature = message^d mod n
      * d : Private exponent
@@ -70,9 +70,9 @@ class my_rsa{
      * Encrypt a message.
      * If message is less than n.
      *
-     * @param {BigInt} message: message to encrypt.
+     * @param {bigint} message: message to encrypt.
      *
-     * @returns {BigInt}  cypher: message encrypted.
+     * @returns {bigint}  cypher: message encrypted.
      *
      * cypher = message^e mod n
      * e : Public exponent
@@ -87,13 +87,13 @@ class my_rsa{
      * Check if the signature is correct
      * If signature is less than n.
      *
-     * @param {BigInt} signature: signature to verify
+     * @param {bigint} signature: signature to verify
      *
-     * @param {BigInt} e: Public exponent
+     * @param {bigint} e: Public exponent
      *
-     * @param {BigInt} n: Public modulus
+     * @param {bigint} n: Public modulus
      *
-     * @returns {BigInt}  The signature is correct if message = signature^e mod n
+     * @returns {bigint}  The signature is correct if message = signature^e mod n
      *
      */
     static verify(signature, e, n){
@@ -104,15 +104,15 @@ class my_rsa{
      * Blind a message with a blinding factor
      * The message to be blinded and the public key (e,n) of the entity signing
      *
-     * @param {BigInt} message: message to be blind.
+     * @param {bigint} message: message to be blind.
      *
-     * @param {BigInt} e: Public exponent
+     * @param {bigint} e: Public exponent
      *
-     * @param {BigInt} n: Public modulus
+     * @param {bigint} n: Public modulus
      *
-     * @returns {BigInt}  blindedMessage = message * r^e mod n
+     * @returns {{r: bigint, blindedMessage: bigint}}  blindedMessage = message * r^e mod n
      *
-     * @returns {BigInt} r: blind factor  r ϵ Zn * such as gcd(r,n) = 1
+     *  r: blind factor  r ϵ Zn * such as gcd(r,n) = 1
      */
     static blind(message, e, n){
         const r = this.generateRandomPrime();
@@ -131,13 +131,13 @@ class my_rsa{
     /**
      * Unblind cryptogram in order to obtain the signature
      *
-     * @param {BigInt} cryptogram: message to unblind
+     * @param {bigint} cryptogram: message to unblind
      *
-     * @param {BigInt} r: blind factor
+     * @param {bigint} r: blind factor
      *
-     * @param {BigInt} n: Public modulus
+     * @param {bigint} n: Public modulus
      *
-     * @returns {BigInt}  Signature = cryptogram * r^-1 mod n
+     * @returns {bigint}  Signature = cryptogram * r^-1 mod n
      * Inverse modular : r^(-1) mod (n)
      */
     static unBlind(cryptogram, r, n){
@@ -148,14 +148,14 @@ class my_rsa{
     /**
      * Check if the numbers are coprime if  gcd(a,b) = 1
      *
-     * @param {BigInt} number: one of the two numbers to compare
+     * @param {bigint} number: one of the two numbers to compare
      *
-     * @param {BigInt} otherNumber: one of the two numbers to compare
+     * @param {bigint} otherNumber: one of the two numbers to compare
      *
      * @returns {boolean}
      */
     static checkCoPrime(number, otherNumber){
-        return cryptoUtils.gcd(number, otherNumber) === BigInt(1)
+        return cryptoUtils.gcd(number, otherNumber) === bigint(1)
     }
 
     /**
@@ -163,7 +163,7 @@ class my_rsa{
      *
      * n: Public modulus
      *
-     * @param {BigInt} number: number to check
+     * @param {bigint} number: number to check
      *
      */
     checkLessThanN(number){
@@ -175,7 +175,7 @@ class my_rsa{
     /**
      * Generate a random prime
      *
-     * @returns {BigInt}  Random prime number
+     * @returns {bigint}  Random prime number
      */
     static generateRandomPrime() {
         return cryptoUtils.primeSync(100,5);
