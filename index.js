@@ -155,7 +155,7 @@ class my_rsa{
      * @returns {boolean}
      */
     static checkCoPrime(number, otherNumber){
-        return cryptoUtils.gcd(number, otherNumber) === bigint(1)
+        return cryptoUtils.gcd(number, otherNumber) === BigInt(1)
     }
 
     /**
