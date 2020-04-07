@@ -22,9 +22,15 @@ class my_rsa{
         this.publicKey.e = BigInt(65537);
 
         //Let's check if it is a coprime
-        if (this.publicKey.n % this.publicKey.e === (0)) {
-            console.log("La has liao pollito")
-            //TODO: Make sure that if e and phi are not coprime to start again with p and q
+        if (cryptoUtils.gcd(this.publicKey.n, this.publicKey.e) !== BigInt(1)) {
+            console.log('Restarting RSA initialization: e and n are not coprime');
+            return new my_rsa();
+        }
+
+        // Check that e and phi are coprime
+        if(cryptoUtils.gcd(phi, this.publicKey.e) !== BigInt(1)){
+            console.log('Restarting RSA initialization: e and phi are not coprime');
+            return new my_rsa();
         }
 
         //Calculate d=e^(-1) mod phi(n)
