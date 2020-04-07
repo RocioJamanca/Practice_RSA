@@ -89,6 +89,10 @@ class my_rsa{
         return cryptoUtils.modPow(message, this.publicKey.e, this.publicKey.n);
     }
 
+    static encrypt(message, e, n){
+        return cryptoUtils.modPow(message, e, n);
+    }
+
     /**
      * Check if the signature is correct
      * If signature is less than n.
