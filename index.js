@@ -8,33 +8,36 @@ class my_rsa{
         this.privateKey = {};
 
         //Two distinct prime numbers -> Co-Primes
-        let p = my_rsa.generateRandomPrime();
-        let q = my_rsa.generateRandomPrime();
+        Promise.all([cryptoUtils.prime(1024, 5), cryptoUtils.prime(1024, 5)]).then((values)=>{
+            console.log('p & q generated')
+            let p = values[0];
+            let q = values[1];
 
-        // n = p * q
-        this.publicKey.n = p * q;
-        this.privateKey.n= this.publicKey.n;
+            // n = p * q
+            this.publicKey.n = p * q;
+            this.privateKey.n= this.publicKey.n;
 
-        //Calculate Totien function = (p-1)(q-1)
-        let phi = (p-BigInt(1))*(q-BigInt(1));
+            //Calculate Totien function = (p-1)(q-1)
+            let phi = (p-BigInt(1))*(q-BigInt(1));
 
-        //"e" has to be coprime with phi
-        this.publicKey.e = BigInt(65537);
+            //"e" has to be coprime with phi
+            this.publicKey.e = BigInt(65537);
 
-        //Let's check if it is a coprime
-        if (cryptoUtils.gcd(this.publicKey.n, this.publicKey.e) !== BigInt(1)) {
-            console.log('Restarting RSA initialization: e and n are not coprime');
-            return new my_rsa();
-        }
+            //Let's check if it is a coprime
+            if (cryptoUtils.gcd(this.publicKey.n, this.publicKey.e) !== BigInt(1)) {
+                console.log('Restarting RSA initialization: e and n are not coprime');
+                return new my_rsa();
+            }
 
-        // Check that e and phi are coprime
-        if(cryptoUtils.gcd(phi, this.publicKey.e) !== BigInt(1)){
-            console.log('Restarting RSA initialization: e and phi are not coprime');
-            return new my_rsa();
-        }
+            // Check that e and phi are coprime
+            if(cryptoUtils.gcd(phi, this.publicKey.e) !== BigInt(1)){
+                console.log('Restarting RSA initialization: e and phi are not coprime');
+                return new my_rsa();
+            }
 
-        //Calculate d=e^(-1) mod phi(n)
-        this.privateKey.d = cryptoUtils.modInv(this.publicKey.e, phi);
+            //Calculate d=e^(-1) mod phi(n)
+            this.privateKey.d = cryptoUtils.modInv(this.publicKey.e, phi);
+        })
     }
 
 
