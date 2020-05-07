@@ -191,7 +191,7 @@ class my_rsa{
      * @returns {bigint}  Random prime number
      */
     static generateRandomPrime() {
-        return cryptoUtils.primeSync(1024,5);
+        return cryptoUtils.primeSync(1024,3);
     }
 }
 module.exports = my_rsa;
