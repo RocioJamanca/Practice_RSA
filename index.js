@@ -181,7 +181,7 @@ class my_rsa{
      */
     checkLessThanN(number){
         if(number > this.publicKey.n){
-            console.log('The number does not meet the condition less than n');
+            throw 'The number does not meet the condition less than n';
         }
     }
 
